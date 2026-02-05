@@ -1,0 +1,207 @@
+
+<!DOCTYPE html>
+<html lang="ka">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ვალენტინობის ნაზი სიურპრიზი 💗</title>
+
+<style>
+*{box-sizing:border-box;}
+body{
+    margin:0;
+    font-family:'Arial',sans-serif;
+    background: linear-gradient(180deg,#ffd6e0,#fff1f5);
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    overflow:hidden;
+}
+
+.card{
+    background:white;
+    width:90%;
+    max-width:420px;
+    padding:30px 25px;
+    border-radius:24px;
+    text-align:center;
+    box-shadow:0 12px 30px rgba(0,0,0,.18);
+    position:relative;
+}
+
+.sticker{
+    font-size:64px;
+    animation:float 3s ease-in-out infinite;
+}
+
+@keyframes float{
+    0%{transform:translateY(0);}
+    50%{transform:translateY(-12px);}
+    100%{transform:translateY(0);}
+}
+
+h1{
+    font-size:clamp(20px,5vw,26px);
+    color:#ff5d8f;
+    margin:18px 0;
+}
+
+.buttons{
+    position:relative;
+    height:90px;
+    margin-top:25px;
+}
+
+button{
+    padding:12px 26px;
+    font-size:clamp(16px,4vw,20px);
+    border:none;
+    border-radius:14px;
+    cursor:pointer;
+    position:absolute;
+    transition:transform .25s ease, box-shadow .25s ease;
+}
+
+#yesBtn{
+    background:#ff5d8f;
+    color:white;
+    left:25%;
+}
+
+#noBtn{
+    background:#ced4da;
+    color:#495057;
+    right:25%;
+}
+
+.result{
+    display:none;
+}
+
+.result img{
+    width:200px;
+    max-width:80%;
+    margin-top:15px;
+}
+
+.love-text{
+    font-size:clamp(18px,5vw,24px);
+    color:#ff5d8f;
+    margin-top:15px;
+}
+
+/* hearts on no */
+.heart{
+    position:absolute;
+    font-size:18px;
+    animation:rise 2s ease forwards;
+}
+
+@keyframes rise{
+    to{
+        transform:translateY(-80px);
+        opacity:0;
+    }
+}
+
+/* gentle confetti */
+.confetti{
+    position:fixed;
+    width:8px;
+    height:8px;
+    top:-10px;
+    animation:fall linear forwards;
+}
+
+@keyframes fall{
+    to{transform:translateY(110vh) rotate(360deg);}
+}
+</style>
+</head>
+
+<body>
+
+<div class="card" id="card">
+    <div class="sticker">💗</div>
+    <h1>ნინი იქნები ჩემი ვალენტინი?</h1>
+
+    <div class="buttons">
+        <button id="yesBtn">კი</button>
+        <button id="noBtn">არა</button>
+    </div>
+
+    <div class="result" id="result">
+        <div class="love-text">იეეს აბაა რაა მიყვარხარ🥳💖</div>
+        <img src="https://media.giphy.com/media/MDJ9IbxxvDUQM/giphy.gif">
+    </div>
+</div>
+
+<!-- Soft sounds -->
+<audio id="tapSound" src="https://assets.mixkit.co/sfx/preview/mixkit-soft-click-1126.mp3"></audio>
+<audio id="yesSound" src="https://assets.mixkit.co/sfx/preview/mixkit-happy-bells-notification-937.mp3"></audio>
+
+<script>
+const yesBtn=document.getElementById("yesBtn");
+const noBtn=document.getElementById("noBtn");
+const tapSound=document.getElementById("tapSound");
+const yesSound=document.getElementById("yesSound");
+const result=document.getElementById("result");
+
+let noClicks=0;
+
+noBtn.addEventListener("click",()=>{
+    tapSound.currentTime=0;
+    tapSound.volume=0.3;
+    tapSound.play();
+
+    noClicks++;
+    yesBtn.style.transform=`scale(${1+noClicks*0.15})`;
+    yesBtn.style.boxShadow="0 0 15px rgba(255,93,143,.6)";
+
+    const x=Math.random()*200-100;
+    const y=Math.random()*60-30;
+    noBtn.style.transform=`translate(${x}px,${y}px)`;
+
+    spawnHearts(noBtn);
+});
+
+yesBtn.addEventListener("click",()=>{
+    yesSound.volume=0.4;
+    yesSound.play();
+
+    document.querySelector(".buttons").style.display="none";
+    document.querySelector("h1").style.display="none";
+    document.querySelector(".sticker").style.display="none";
+    result.style.display="block";
+    launchConfetti();
+});
+
+function spawnHearts(btn){
+    for(let i=0;i<4;i++){
+        const h=document.createElement("div");
+        h.className="heart";
+        h.innerText="💗";
+        h.style.left=btn.offsetLeft+btn.offsetWidth/2+"px";
+        h.style.top=btn.offsetTop+"px";
+        h.style.animationDelay=Math.random()*0.3+"s";
+        btn.parentElement.appendChild(h);
+        setTimeout(()=>h.remove(),2000);
+    }
+}
+
+function launchConfetti(){
+    for(let i=0;i<60;i++){
+        const c=document.createElement("div");
+        c.className="confetti";
+        c.style.left=Math.random()*100+"vw";
+        c.style.background=`hsl(${Math.random()*360},80%,75%)`;
+        c.style.animationDuration=Math.random()*2+3+"s";
+        document.body.appendChild(c);
+        setTimeout(()=>c.remove(),5000);
+    }
+}
+</script>
+
+</body>
+</html>
